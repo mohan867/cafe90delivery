@@ -194,3 +194,31 @@
   background: #D97706;
   color: white;
 }
+
+/* Mobile Responsive Adjustments (< 768px) */
+@media (max-width: 768px) {
+  .cauth-page {
+    padding: 12px;
+  }
+
+  .cauth-card {
+    padding: 24px 18px;
+    max-width: 100%;
+    border-radius: 16px;
+  }
+
+  .cauth-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .cauth-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 12px;
+  }
+
+  .cauth-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+}

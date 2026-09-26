@@ -117,3 +117,71 @@
   margin-top: 40px;
   font-size: 0.9rem;
 }
+
+/* Mobile Responsive Drawer Overlay & Role Cards (< 768px) */
+@media (max-width: 768px) {
+  .login-page {
+    padding: 12px;
+  }
+
+  .login-container {
+    flex-direction: column;
+    max-width: 100%;
+    min-height: auto;
+    border-radius: var(--radius-lg);
+  }
+
+  .login-left {
+    padding: 28px 20px;
+    align-items: center !important;
+  }
+
+  .login-left img {
+    width: 160px !important;
+  }
+
+  .welcome-section h1 {
+    font-size: 1.8rem !important;
+  }
+
+  .welcome-section p {
+    font-size: 0.95rem !important;
+  }
+
+  .login-right {
+    padding: 28px 20px;
+  }
+
+  .login-header {
+    margin-bottom: 24px;
+  }
+
+  .login-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .role-cards {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .role-card {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    padding: 16px 20px;
+    gap: 16px;
+  }
+
+  .role-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .role-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}

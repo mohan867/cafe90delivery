@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Mail, Lock, Eye, EyeOff, ArrowLeft, LogIn } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import './CustomerAuth.css';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,23 +23,18 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login/admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Admin login failed.');
+      const user = await login(form);
+      if (!user) {
+        throw new Error('Login failed. Could not retrieve user profile.');
       }
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      if (user.role !== 'admin') {
+        throw new Error('Access denied. This account does not have Admin privileges.');
+      }
+
       navigate('/dashboard/admin');
     } catch (err) {
-      setError(err.message || 'Failed to login as admin.');
+      setError(err.message || 'Admin authentication failed.');
     } finally {
       setLoading(false);
     }
@@ -46,12 +43,10 @@ const AdminLogin = () => {
   return (
     <div className="cauth-page">
       <div className="cauth-card glass-panel" style={{ borderTop: '4px solid #8B5CF6' }}>
-        {/* Back Button */}
         <button className="cauth-back" onClick={() => navigate('/login')}>
           <ArrowLeft size={18} /> Back
         </button>
 
-        {/* Header */}
         <div className="cauth-header">
           <div className="cauth-icon admin-icon" style={{ background: 'rgba(139, 92, 246, 0.15)', color: '#8B5CF6' }}>
             <Shield size={32} />
@@ -60,10 +55,10 @@ const AdminLogin = () => {
           <p className="text-secondary">Authorized personnel only. Please sign in.</p>
         </div>
 
-        {/* Error */}
+
+
         {error && <div className="cauth-error">{error}</div>}
 
-        {/* Form */}
         <form className="cauth-form" onSubmit={handleSubmit}>
           <div className="cauth-field">
             <label>Admin Email</label>

@@ -89,3 +89,33 @@
   padding: 8px 24px;
   margin-left: 10px;
 }
+
+/* Mobile Responsive Adjustments (< 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    width: 96%;
+    top: 10px;
+    padding: 10px 14px;
+  }
+
+  .nav-container {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .nav-links {
+    order: 3;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 8px;
+    padding: 6px 0 2px 0;
+  }
+
+  .nav-links a, .nav-link-btn {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+}

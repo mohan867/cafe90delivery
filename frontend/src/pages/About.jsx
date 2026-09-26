@@ -25,7 +25,7 @@ const About = () => {
               relive the simplicity of the 90s.
             </p>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px' }}>
+            <div className="about-stats-grid">
               <div style={{ textAlign: 'center', padding: '20px', background: 'rgba(255,255,255,0.03)', borderRadius: '20px' }}>
                 <h4 style={{ color: '#D97706', fontSize: '2rem', marginBottom: '5px' }}>10k+</h4>
                 <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Happy Customers</p>
@@ -38,6 +38,23 @@ const About = () => {
                 <h4 style={{ color: '#D97706', fontSize: '2rem', marginBottom: '5px' }}>4.9</h4>
                 <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>Average Rating</p>
               </div>
+            </div>
+
+            <h3 style={{ fontSize: '1.8rem', marginBottom: '15px', color: 'white' }}>Why Choose Us?</h3>
+            <div className="about-features-grid">
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <h4 style={{ color: '#D97706', marginBottom: '8px', fontSize: '1.1rem' }}>☕ Authentic Recipes</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Crafted using traditional methods and fresh, premium ingredients every single day.</p>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <h4 style={{ color: '#D97706', marginBottom: '8px', fontSize: '1.1rem' }}>🚀 Express Delivery</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Hot and fresh food delivered directly to your doorstep with real-time tracking.</p>
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: '15px' }}>Have questions or want to host an event with us?</p>
+              <a href="/contact" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-block', padding: '12px 30px', borderRadius: '12px' }}>Contact Us Today</a>
             </div>
           </div>
         </div>

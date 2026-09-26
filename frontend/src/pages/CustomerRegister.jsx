@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Lock, Phone, Eye, EyeOff, ArrowLeft, UserPlus } from 'lucide-react';
+import { api } from '../services/api';
 import './CustomerAuth.css';
 
 const CustomerRegister = () => {
@@ -27,24 +28,22 @@ const CustomerRegister = () => {
       setError('Password must be at least 6 characters');
       return;
     }
+    if (!/[a-zA-Z]/.test(form.password) || !/[0-9!@#$%^&*]/.test(form.password)) {
+      setError('Password must contain both letters and numbers/symbols');
+      return;
+    }
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          password: form.password,
-        }),
+      await api.register({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Registration failed');
       setSuccess('Account created successfully! Redirecting to login...');
       setTimeout(() => navigate('/login/customer'), 2000);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Registration failed.');
     } finally {
       setLoading(false);
     }
@@ -53,12 +52,10 @@ const CustomerRegister = () => {
   return (
     <div className="cauth-page">
       <div className="cauth-card glass-panel">
-        {/* Back Button */}
         <button className="cauth-back" onClick={() => navigate('/login/customer')}>
           <ArrowLeft size={18} /> Back to Login
         </button>
 
-        {/* Header */}
         <div className="cauth-header">
           <div className="cauth-icon customer-icon">
             <UserPlus size={32} />
@@ -67,11 +64,9 @@ const CustomerRegister = () => {
           <p className="text-secondary">Join Cafe 90's and start ordering!</p>
         </div>
 
-        {/* Messages */}
         {error && <div className="cauth-error">{error}</div>}
         {success && <div className="cauth-success">{success}</div>}
 
-        {/* Form */}
         <form className="cauth-form" onSubmit={handleSubmit}>
           <div className="cauth-field">
             <label>Full Name</label>
@@ -124,7 +119,7 @@ const CustomerRegister = () => {
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
-                placeholder="Min. 6 characters"
+                placeholder="Min. 6 characters (Letters & Numbers)"
                 value={form.password}
                 onChange={handleChange}
                 required
@@ -133,6 +128,17 @@ const CustomerRegister = () => {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+            {/* Live Password Strength Indicator */}
+            {form.password && (
+              <div style={{ marginTop: '8px', fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ color: form.password.length >= 6 ? '#10b981' : '#f87171', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {form.password.length >= 6 ? '✓' : '✗'} Minimum 6 characters
+                </span>
+                <span style={{ color: /[a-zA-Z]/.test(form.password) && /[0-9!@#$%^&*]/.test(form.password) ? '#10b981' : '#f87171', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {/[a-zA-Z]/.test(form.password) && /[0-9!@#$%^&*]/.test(form.password) ? '✓' : '✗'} Contains both letters and numbers/symbols
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="cauth-field">
@@ -148,6 +154,15 @@ const CustomerRegister = () => {
                 required
               />
             </div>
+            {form.confirmPassword && (
+              <div style={{ marginTop: '6px', fontSize: '0.8rem' }}>
+                {form.password === form.confirmPassword ? (
+                  <span style={{ color: '#10b981' }}>✓ Passwords match</span>
+                ) : (
+                  <span style={{ color: '#f87171' }}>✗ Passwords do not match</span>
+                )}
+              </div>
+            )}
           </div>
 
           <button className="cauth-submit btn-primary" type="submit" disabled={loading}>
@@ -159,7 +174,6 @@ const CustomerRegister = () => {
           </button>
         </form>
 
-        {/* Login Link */}
         <div className="cauth-footer">
           <p>Already have an account?</p>
           <Link to="/login/customer" className="cauth-register-btn">
