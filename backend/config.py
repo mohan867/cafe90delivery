@@ -37,7 +37,17 @@ class Config:
         "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", 30)),
     }
     
-    CORS_ORIGINS = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "https://cafe90.vercel.app,http://localhost:5173,http://localhost:3000").split(",")]
+    raw_origins = os.getenv(
+        "CORS_ORIGINS", 
+        "https://cafe90delivery.vercel.app,https://cafe90.vercel.app,http://localhost:5173,http://localhost:3000"
+    ).split(",")
+    parsed_origins = set()
+    for origin in raw_origins:
+        o = origin.strip()
+        if o:
+            parsed_origins.add(o.rstrip("/"))
+            parsed_origins.add(o.rstrip("/") + "/")
+    CORS_ORIGINS = list(parsed_origins)
     ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
     DELIVERY_RADIUS_KM = float(os.getenv("DELIVERY_RADIUS_KM", 8.0))
     RESTAURANT_LATITUDE = float(os.getenv("RESTAURANT_LAT", 11.2447993))
