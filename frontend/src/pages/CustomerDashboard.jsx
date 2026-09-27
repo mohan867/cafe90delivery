@@ -419,11 +419,11 @@ const CustomerDashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [user, setUser] = useState({ full_name: "Customer" });
   const [activeView, setActiveView] = useState("menu");
-  
+
   const [foodItems, setFoodItems] = useState([]);
   const [myOrders, setMyOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   const deliveryFee = 30;
   const [location, setLocation] = useState(null);
   const [landmark, setLandmark] = useState("");
@@ -529,9 +529,9 @@ const CustomerDashboard = () => {
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (!stored) { navigate("/login/customer"); return; }
-    try { 
+    try {
       const userData = JSON.parse(stored);
-      setUser(userData); 
+      setUser(userData);
     } catch { navigate("/login/customer"); }
 
     fetchDashboardData();
@@ -579,14 +579,14 @@ const CustomerDashboard = () => {
   const filteredItems = foodItems.filter(item => {
     const categoryMatch = activeCategory === "All" || item.category_name === activeCategory;
     const dietMatch = dietPreference === "all" || item.diet_type === dietPreference;
-    const searchMatch = !searchQuery || 
+    const searchMatch = !searchQuery ||
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
     return categoryMatch && dietMatch && searchMatch;
   });
 
   const handleLogout = async () => {
-    try { await api.logout(); } catch {}
+    try { await api.logout(); } catch { }
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
@@ -604,14 +604,14 @@ const CustomerDashboard = () => {
       async (position) => {
         const { latitude, longitude } = position.coords;
         setLocation({ lat: latitude, lng: longitude });
-        
+
         try {
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
             { headers: { 'Accept-Language': 'en' } }
           );
           const data = await response.json();
-          
+
           if (data && data.address) {
             const addr = data.address;
             const house = addr.house_number || addr.building || "";
@@ -818,7 +818,7 @@ const CustomerDashboard = () => {
                     const isVeg = item.diet_type === 'veg';
                     return (
                       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '16px', boxSizing: 'border-box' }}>
-                        
+
                         {/* Food Image Header */}
                         <div style={{ position: 'relative', width: '100%', height: '165px', borderRadius: '14px', overflow: 'hidden', flexShrink: 0, marginBottom: '14px' }}>
                           <img
@@ -889,7 +889,7 @@ const CustomerDashboard = () => {
           {activeView === 'cart' && (
             <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div className="cart-page-container glass-panel" style={{ width: '100%', maxWidth: '800px', padding: '30px' }}>
-                
+
                 {/* STEP 1: CART ITEMS REVIEW */}
                 {checkoutStep === 'cart' && (
                   <>
@@ -898,8 +898,8 @@ const CustomerDashboard = () => {
                         <h2 style={{ fontSize: '1.8rem', marginBottom: '4px' }}>Your Shopping Cart</h2>
                         <p style={{ color: 'var(--text-secondary)' }}>{cartCount} items in your tray</p>
                       </div>
-                      <button 
-                        className="btn-secondary" 
+                      <button
+                        className="btn-secondary"
                         onClick={() => setActiveView('menu')}
                         style={{ padding: '10px 20px', borderRadius: '12px', fontSize: '0.9rem' }}
                       >
@@ -949,9 +949,9 @@ const CustomerDashboard = () => {
                           <span>Total Amount</span>
                           <span className="text-accent">₹{(cartTotal + deliveryFee).toFixed(2)}</span>
                         </div>
-                        <button 
-                          className="btn-primary w-100" 
-                          style={{ marginTop: '25px', padding: '16px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }} 
+                        <button
+                          className="btn-primary w-100"
+                          style={{ marginTop: '25px', padding: '16px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                           onClick={() => setCheckoutStep('location')}
                         >
                           <MapPin size={20} />
@@ -969,7 +969,7 @@ const CustomerDashboard = () => {
                     <p style={{ color: 'var(--text-secondary)', marginBottom: '25px' }}>Where should we deliver your order?</p>
 
                     <div className="location-card glass-panel" style={{ width: '100%', maxWidth: '550px', padding: '25px', textAlign: 'left' }}>
-                      <button 
+                      <button
                         onClick={handleDetectLocation}
                         disabled={isLocating}
                         style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(217, 119, 6, 0.15)', border: '1px solid rgba(217, 119, 6, 0.3)', color: '#D97706', padding: '10px 16px', borderRadius: '10px', width: '100%', cursor: 'pointer', fontWeight: '600', marginBottom: '16px', justifyContent: 'center' }}
@@ -1054,7 +1054,7 @@ const CustomerDashboard = () => {
                         <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 'bold', marginBottom: '8px' }}>
                           SELECTED STREET ADDRESS / LANDMARK / DOOR NO.
                         </label>
-                        <textarea 
+                        <textarea
                           placeholder="e.g. Flat 302, Green Avenue, Tirunelveli"
                           value={landmark}
                           onChange={(e) => setLandmark(e.target.value)}
@@ -1062,9 +1062,9 @@ const CustomerDashboard = () => {
                         />
                       </div>
 
-                      <button 
-                        className="btn-primary w-100" 
-                        style={{ padding: '16px', fontSize: '1.1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }} 
+                      <button
+                        className="btn-primary w-100"
+                        style={{ padding: '16px', fontSize: '1.1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                         onClick={handleProceedToPayment}
                         disabled={!landmark.trim()}
                       >
@@ -1073,7 +1073,7 @@ const CustomerDashboard = () => {
                       </button>
                     </div>
 
-                    <button 
+                    <button
                       style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', marginTop: '20px', cursor: 'pointer', fontSize: '0.9rem' }}
                       onClick={() => setCheckoutStep('cart')}
                     >
@@ -1089,7 +1089,7 @@ const CustomerDashboard = () => {
                     <p style={{ color: 'var(--text-secondary)', marginBottom: '25px' }}>Total Payable: <strong style={{ color: '#D97706', fontSize: '1.2rem' }}>₹{(cartTotal + deliveryFee).toFixed(2)}</strong></p>
 
                     <div className="glass-panel" style={{ width: '100%', maxWidth: '600px', padding: '30px' }}>
-                      
+
                       {/* Payment Options Tabs */}
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '25px' }}>
                         <button
@@ -1196,7 +1196,7 @@ const CustomerDashboard = () => {
 
                     </div>
 
-                    <button 
+                    <button
                       style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', marginTop: '20px', cursor: 'pointer', fontSize: '0.9rem' }}
                       onClick={() => setCheckoutStep('location')}
                     >
@@ -1281,8 +1281,8 @@ const CustomerDashboard = () => {
                     <h2 style={{ fontSize: '1.8rem', marginBottom: '4px' }}>My Orders</h2>
                     <p style={{ color: 'var(--text-secondary)' }}>Track and manage your orders</p>
                   </div>
-                  <button 
-                    className="btn-secondary" 
+                  <button
+                    className="btn-secondary"
                     onClick={() => setActiveView('menu')}
                     style={{ padding: '10px 20px', borderRadius: '12px', fontSize: '0.9rem' }}
                   >
@@ -1309,7 +1309,7 @@ const CustomerDashboard = () => {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span style={{ fontWeight: 'bold' }}>Total: ₹{order.total_amount}</span>
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button 
+                          <button
                             className="btn-primary"
                             style={{ padding: '6px 14px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '4px', background: '#D97706', border: 'none' }}
                             onClick={() => setTrackingOrderId(order.id)}
@@ -1334,7 +1334,7 @@ const CustomerDashboard = () => {
           {activeView === 'help' && (
             <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px', paddingBottom: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <div style={{ width: '100%', maxWidth: '900px' }}>
-                
+
                 <div style={{ textAlign: 'center', marginBottom: '35px' }}>
                   <h2 style={{ fontSize: '2.2rem', color: '#D97706', marginBottom: '6px' }}>Help & Customer Support</h2>
                   <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)' }}>Get in touch with Cafe 90's support or visit our restaurant.</p>
@@ -1426,7 +1426,7 @@ const CustomerDashboard = () => {
                 )}
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '25px', alignItems: 'start' }}>
-                  
+
                   {/* Contact Form */}
                   <div className="glass-panel" style={{ padding: '28px' }}>
                     <h3 style={{ fontSize: '1.5rem', marginBottom: '18px' }}>Send Us a Message</h3>
@@ -1502,7 +1502,7 @@ const CustomerDashboard = () => {
                       </p>
                       <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px 18px', borderRadius: '10px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.08)' }}>
                         <p style={{ fontWeight: 'bold', fontSize: '1rem', marginBottom: '4px' }}>Cafe 90's Resto</p>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>Anna Nagar / Main Road, Chennai, Tamil Nadu</p>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>Perundurai, Moongilpalayam, Tamil Nadu 638056</p>
                       </div>
                     </div>
 

@@ -6,8 +6,12 @@ from database.models.food import FoodCategory, FoodItem, DietType
 class FoodService:
     @staticmethod
     def get_all_categories():
-        categories = db.session.query(FoodCategory).filter_by(is_active=True).order_by(FoodCategory.display_order.asc()).all()
-        return [c.to_dict() for c in categories]
+        try:
+            categories = db.session.query(FoodCategory).filter_by(is_active=True).order_by(FoodCategory.display_order.asc()).all()
+            return [c.to_dict() for c in categories]
+        except Exception:
+            db.session.rollback()
+            return []
 
     @staticmethod
     def get_food_items(category_name=None, diet_type=None, search=None, include_unavailable=True, page=1, limit=100):

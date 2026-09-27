@@ -37,7 +37,7 @@ def upgrade() -> None:
 
     # Categories table
     op.create_table(
-        'categories',
+        'food_categories',
         sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
         sa.Column('name', sa.String(length=100), nullable=False),
         sa.Column('description', sa.Text(), nullable=True),
@@ -57,7 +57,7 @@ def upgrade() -> None:
         sa.Column('image_url', sa.Text(), nullable=True),
         sa.Column('is_available', sa.Boolean(), server_default='true', nullable=False),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ondelete='SET NULL'),
+        sa.ForeignKeyConstraint(['category_id'], ['food_categories.id'], ondelete='SET NULL'),
         sa.PrimaryKeyConstraint('id')
     )
 
@@ -156,7 +156,7 @@ def upgrade() -> None:
 
     # Feedback table
     op.create_table(
-        'feedback',
+        'feedbacks',
         sa.Column('id', sa.UUID(), server_default=sa.text('gen_random_uuid()'), nullable=False),
         sa.Column('name', sa.String(length=100), nullable=False),
         sa.Column('email', sa.String(length=255), nullable=False),
@@ -168,7 +168,7 @@ def upgrade() -> None:
     )
 
 def downgrade() -> None:
-    op.execute("DROP TABLE IF EXISTS feedback CASCADE")
+    op.execute("DROP TABLE IF EXISTS feedbacks CASCADE")
     op.execute("DROP TABLE IF EXISTS user_addresses CASCADE")
     op.execute("DROP TABLE IF EXISTS order_status_history CASCADE")
     op.execute("DROP TABLE IF EXISTS order_items CASCADE")
@@ -176,6 +176,6 @@ def downgrade() -> None:
     op.execute("DROP TABLE IF EXISTS cart_items CASCADE")
     op.execute("DROP TABLE IF EXISTS carts CASCADE")
     op.execute("DROP TABLE IF EXISTS food_items CASCADE")
-    op.execute("DROP TABLE IF EXISTS categories CASCADE")
+    op.execute("DROP TABLE IF EXISTS food_categories CASCADE")
     op.execute("DROP TABLE IF EXISTS users CASCADE")
 

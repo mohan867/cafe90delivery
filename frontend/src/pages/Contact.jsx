@@ -142,7 +142,7 @@ const Contact = () => {
                 </p>
                 <div style={{ background: 'rgba(255,255,255,0.03)', padding: '15px 20px', borderRadius: '12px', marginBottom: '25px', border: '1px solid rgba(255,255,255,0.08)' }}>
                   <p style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: '4px' }}>Cafe 90's Resto</p>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Anna Nagar / Main Road, Chennai, Tamil Nadu</p>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem' }}>Perundurai, Moongilpalayam, Tamil Nadu 638056</p>
                 </div>
               </div>
 

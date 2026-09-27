@@ -126,8 +126,21 @@ def create_app(config_class=Config, skip_autoseed=False):
         logger.error(f"Unhandled 500 error: {e}", exc_info=True)
         return error_response(message="Internal server error", code="INTERNAL_SERVER_ERROR", status_code=500)
 
+    @app.teardown_request
+    def teardown_db_session(exception=None):
+        if exception:
+            try:
+                db.session.rollback()
+            except Exception:
+                pass
+        db.session.remove()
+
     @app.errorhandler(Exception)
     def unhandled_exception(e):
+        try:
+            db.session.rollback()
+        except Exception:
+            pass
         logger.error(f"Unhandled Exception: {e}", exc_info=True)
         return error_response(message="An unexpected server error occurred", code="UNHANDLED_EXCEPTION", status_code=500)
 
