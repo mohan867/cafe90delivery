@@ -41,7 +41,11 @@ class Config:
         "CORS_ORIGINS", 
         "https://cafe90delivery.vercel.app,https://cafe90.vercel.app,http://localhost:5173,http://localhost:3000"
     ).split(",")
-    parsed_origins = set()
+    parsed_origins = set([
+        r"https://.*\.vercel\.app",
+        r"http://localhost:\d+",
+        r"http://127\.0\.0\.1:\d+"
+    ])
     for origin in raw_origins:
         o = origin.strip()
         if o:

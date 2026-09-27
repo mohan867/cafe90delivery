@@ -1,4 +1,9 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+let rawBase = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+rawBase = rawBase.replace(/\/+$/, '');
+if (!rawBase.endsWith('/api/v1')) {
+  rawBase = `${rawBase}/api/v1`;
+}
+const API_BASE_URL = rawBase;
 
 async function request(endpoint, options = {}) {
   // Purge any legacy token leftover in localStorage for security
