@@ -59,18 +59,18 @@ def login():
             
         token = auth_data.get("token")
         response = success_response(
-            data={"user": auth_data.get("user")},
+            data={"user": auth_data.get("user"), "token": token},
             message="Login successful",
             status_code=200
         )
         
-        is_prod = (current_app.config.get("ENVIRONMENT") == "production")
+        is_secure = request.is_secure or (current_app.config.get("ENVIRONMENT") == "production")
         response.set_cookie(
             key="auth_token",
             value=token,
             httponly=True,
-            samesite="None" if is_prod else "Lax",
-            secure=is_prod,
+            samesite="None" if is_secure else "Lax",
+            secure=is_secure,
             max_age=86400  # 24 hours
         )
         return response

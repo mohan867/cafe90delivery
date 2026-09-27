@@ -6,11 +6,10 @@ if (!rawBase.endsWith('/api/v1')) {
 const API_BASE_URL = rawBase;
 
 async function request(endpoint, options = {}) {
-  // Purge any legacy token leftover in localStorage for security
-  localStorage.removeItem('token');
-
+  const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
@@ -42,6 +41,12 @@ async function request(endpoint, options = {}) {
       throw err;
     }
 
+    // Auto-save JWT token if returned in response
+    const tokenInRes = data.data?.token || data.token;
+    if (tokenInRes) {
+      localStorage.setItem('token', tokenInRes);
+    }
+
     return data;
   } catch (err) {
     if (!err.status) {
@@ -53,11 +58,29 @@ async function request(endpoint, options = {}) {
 
 export const api = {
   // Auth
-  login: (credentials) => request('/auth/login', { method: 'POST', body: credentials }),
-  register: (userData) => request('/auth/register', { method: 'POST', body: userData }),
+  login: async (credentials) => {
+    const data = await request('/auth/login', { method: 'POST', body: credentials });
+    if (data.data?.token) localStorage.setItem('token', data.data.token);
+    return data;
+  },
+  register: async (userData) => {
+    const data = await request('/auth/register', { method: 'POST', body: userData });
+    if (data.data?.token) localStorage.setItem('token', data.data.token);
+    return data;
+  },
   getMe: () => request('/auth/me'),
-  refreshToken: () => request('/auth/refresh', { method: 'POST' }),
-  logout: () => request('/auth/logout', { method: 'POST' }),
+  refreshToken: async () => {
+    const data = await request('/auth/refresh', { method: 'POST' });
+    if (data.data?.token) localStorage.setItem('token', data.data.token);
+    return data;
+  },
+  logout: async () => {
+    try {
+      await request('/auth/logout', { method: 'POST' });
+    } catch {}
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  },
 
   // Food
   getCategories: () => request('/food/categories'),
