@@ -108,10 +108,10 @@ class OrderService:
             total_amount = subtotal + delivery_fee
 
             payment_method_str = checkout_data.get("payment_method", "COD").upper()
-            if payment_method_str != "COD":
-                return None, "Online payments are currently unavailable. Please select Cash on Delivery (COD)."
-
-            pay_method = PaymentMethod.COD
+            try:
+                pay_method = PaymentMethod(payment_method_str)
+            except ValueError:
+                return None, f"Invalid payment method. Allowed: {[p.value for p in PaymentMethod]}"
             pay_status = PaymentStatus.PENDING
 
             # 4. Create Order Master Record

@@ -111,5 +111,8 @@ def stream_order_location(order_id):
                         break
             time.sleep(3)
 
-    return Response(stream_with_context(event_generator()), content_type="text/event-stream")
+    response = Response(stream_with_context(event_generator()), content_type="text/event-stream")
+    response.headers["X-Accel-Buffering"] = "no"
+    response.headers["Cache-Control"] = "no-cache"
+    return response
 
